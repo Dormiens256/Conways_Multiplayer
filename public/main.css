@@ -1,0 +1,51 @@
+html {
+    background-image: linear-gradient(rgb(50, 50, 50), rgb(65, 65, 65), rgb(50, 50, 50));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+    color: rgb(240, 136, 0);
+    text-align: center;
+    font-size: 50px;
+}
+
+ul{
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.navitem{
+    display: inline;
+}
+
+.navbutton{
+    background-color: transparent;
+    border: none;
+    color: rgb(240, 136, 0); 
+    font-size: 17px;
+}
+
+.navbutton:hover{
+    color: rgb(255, 177, 75); 
+}
+
+.cell{
+    margin: .5px;
+    min-width: 15px;
+    min-height: 15px;
+    display: inline-block;
+    background-color: white;
+    opacity: .1 ;
+}
+
+#gridContainer{
+    text-align: center;
+} 
+
+.row{
+    line-height: 0;
+}
