@@ -1,3 +1,5 @@
+randomColor = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)]
+
 
 for(var i = 0; i < 30; i++){
     var row = document.createElement('div')
@@ -11,3 +13,12 @@ for(var i = 0; i < 30; i++){
 
     gridContainer.appendChild(row)                  //adding the row that is filled with cells to the container
 }    
+
+
+var grid = document.getElementById ('gridContainer')
+grid.addEventListener ('click', squareClicked)
+
+function squareClicked(event){
+    var currentSquare = event.target
+    currentSquare.classList.toggle('boxclicked')
+}

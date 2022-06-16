@@ -49,3 +49,8 @@ ul{
 .row{
     line-height: 0;
 }
+
+.boxclicked.cell{
+    opacity: 1;
+    background-color: rgb(240, 136, 0);
+}
