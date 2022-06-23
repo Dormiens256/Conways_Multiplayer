@@ -24,34 +24,30 @@ const wss = new WebSocket.Server({ server:server })
 //grab the grid from the json and put it into an object
 var JSONgrid = require('./grid.json')
 var gridobject = {
-  grid: JSONgrid
+    type: 0,
+    grid: JSONgrid
 }
 
 wss.on('connection', function connection(ws){
+    ws.send(JSON.stringify(gridobject))
     ws.on('message', function message(data){
-
+        object = JSON.parse(data)
+        console.log(object)
         //upon recieving a change to the graph implements the change and send it to the other clients. 
-        gridobject.grid[data.x][data.y] = 1
-        wss.clients.forEach(function each(client){
+        gridobject.grid[object.x][object.y] = 1
+        wss.clients.forEach(function(client){
             if (client !== ws && client.readyState === WebSocket.OPEN){
                 client.send(data)
             }
         })
 
     })
-
-
-    //sets life to update and send to client every 5 seconds
-    let timerID = setInterval((() => iterateConway(gridobject)), 5000)
-
 })
 
 
 app.get('/', function(req, res, next){
     res.status(200).render('main')
 })
-
-
 
 
 //sets life to update and send to client every 5 seconds
@@ -79,6 +75,14 @@ function iterateConway(gridobject){
           
         }})
     console.log(gridobject.grid)
+
+    message = JSON.stringify(gridobject)
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN){
+            client.send(message)
+        }
+    })
+
 
    
 }
