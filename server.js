@@ -30,7 +30,8 @@ var gridobject = {
 
 wss.on('connection', function connection(ws){
     ws.send(JSON.stringify(gridobject))
-    ws.on('message', function message(data){
+
+    ws.on('message', function incoming(data){
         object = JSON.parse(data)
         console.log(object)
         //upon recieving a change to the graph implements the change and send it to the other clients. 

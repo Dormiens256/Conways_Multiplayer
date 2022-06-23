@@ -33,14 +33,16 @@ function squareClicked(event){
     var currentSquare = event.target
     if(!currentSquare.classList.contains('boxclicked')){
         currentSquare.classList.toggle('boxclicked')
-        var ind = allCells.indexof(currentSquare)
+        var ind = Array.from(allCells).indexOf(currentSquare)
         message = {
-            x: ind/75,
+            x: Math.floor(ind/75),
             y: ind % 75,
             color: randomColor,
             type: 1
         }
-        socket.send(JSON.stringify(message))
+        if(message.x !== -1 && message.y !== -1){
+            socket.send(JSON.stringify(message))
+        }
 
         
     }
