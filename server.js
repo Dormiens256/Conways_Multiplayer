@@ -2,32 +2,63 @@ var fs = require('fs')
 var path = require('path') 
 var express = require('express') 
 var exphbs = require('express-handlebars')
+var WebSocket = require('ws')
 
 var port = process.env.PORT || 3000 
 var app = express() 
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'mainlayout'})) 
 app.set('view engine', 'handlebars')
-//set it to use main handlebars then anything you render will be inside of the {{{body}}}
 
-//serves the index template
+
 app.use(express.static('public')) 
+const { stringify } = require('querystring')
+
+
+//start server + create websocket server
+var server = app.listen(port, function () {
+	console.log("== Server is listening on port " + port) 
+})
+const wss = new WebSocket.Server({ server:server })
+
+//grab the grid from the json and put it into an object
 var JSONgrid = require('./grid.json')
 var gridobject = {
   grid: JSONgrid
 }
 
-const { stringify } = require('querystring')
+wss.on('connection', function connection(ws){
+    ws.on('message', function message(data){
+
+        //upon recieving a change to the graph implements the change and send it to the other clients. 
+        gridobject.grid[data.x][data.y] = 1
+        wss.clients.forEach(function each(client){
+            if (client !== ws && client.readyState === WebSocket.OPEN){
+                client.send(data)
+            }
+        })
+
+    })
+
+
+    //sets life to update and send to client every 5 seconds
+    let timerID = setInterval((() => iterateConway(gridobject)), 5000)
+
+})
+
+
 app.get('/', function(req, res, next){
     res.status(200).render('main')
 })
 
-app.listen(port, function () {
-	console.log("== Server is listening on port " + port) 
-})
 
+
+
+//sets life to update and send to client every 5 seconds
 let timerID = setInterval((() => iterateConway(gridobject)), 5000)
 
+
+//followning two functions are what iterate to the next step of conway
 function iterateConway(gridobject){
     
     var grid2 = Array(30)
