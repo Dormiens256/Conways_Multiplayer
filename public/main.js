@@ -1,5 +1,5 @@
 var socket = new WebSocket('ws://localhost:4000')
-randomColor = Math.floor(Math.random() * 100)
+randomColor = Math.floor(Math.random() * 360)
 var allCells = document.getElementsByClassName("cell")
 
 
@@ -31,8 +31,9 @@ grid.addEventListener ('click', squareClicked)
 
 function squareClicked(event){
     var currentSquare = event.target
-    if(!currentSquare.classList.contains('boxclicked')){
+    if(!currentSquare.classList.contains('boxclicked') && currentSquare.classList.contains('cell')){
         currentSquare.classList.toggle('boxclicked')
+        currentSquare.setAttribute("style", "background-color: hsl("+ randomColor + ", 50%, 50%)")
         var ind = Array.from(allCells).indexOf(currentSquare)
         message = {
             x: Math.floor(ind/75),
@@ -43,7 +44,7 @@ function squareClicked(event){
         if(message.x !== -1 && message.y !== -1){
             socket.send(JSON.stringify(message))
         }
-
+        
         
     }
     
@@ -53,9 +54,13 @@ function updategrid(grid){
     for(var i = 0; i < 30; i++){
         for(var j = 0; j < 75; j++){
             if(allCells[(i * 75) + j].classList.contains('boxclicked') && grid.grid[i][j] === 0){
+                allCells[(i * 75) + j].removeAttribute('style')
                 allCells[(i * 75) + j].classList.toggle('boxclicked')
             }else if(!allCells[(i * 75) + j].classList.contains('boxclicked') && grid.grid[i][j] === 1){
                 allCells[(i * 75) + j].classList.toggle('boxclicked')
+                allCells[(i * 75) + j].setAttribute("style", "background-color: hsl("+ grid.color[i][j] + ", 50%, 50%)")
+            }else if(grid.grid[i][j] === 1){
+                allCells[(i * 75) + j].setAttribute("style", "background-color: hsl("+ grid.color[i][j] + ", 50%, 50%)")
             }
         }
     }
@@ -66,7 +71,7 @@ function updatesquare(square){
     var currentSquare = allCells[ind]
     if(!currentSquare.classList.contains('boxclicked')){
         currentSquare.classList.toggle('boxclicked')
-        
+        currentSquare.setAttribute("style", "background-color: hsl("+ square.color + ", 50%, 50%)")
         
     }
 }
